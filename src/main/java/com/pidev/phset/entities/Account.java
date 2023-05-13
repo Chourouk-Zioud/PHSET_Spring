@@ -1,0 +1,65 @@
+package com.pidev.phset.entities;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import javafx.geometry.Pos;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Set;
+
+@Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class Account implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer idAccount;
+    private String emailAccount;
+    private String passwordAcccount;
+
+
+    @OneToMany(mappedBy = "account")
+    @JsonIgnore
+    Set<Reservation> reservations;
+
+    @ManyToOne
+    @JsonIgnore
+    Team team;
+
+    @OneToMany(mappedBy = "account")
+    @JsonIgnore
+    Set<Claim> claims;
+
+    @OneToMany(mappedBy = "account")
+    @JsonIgnore
+    Set<Post> posts;
+
+    @OneToMany(mappedBy = "account")
+    @JsonIgnore
+    Set<Publicity> publicities;
+
+    @OneToOne(mappedBy = "account")
+    @JsonIgnore
+    Inscription inscription;
+
+    @OneToOne(mappedBy = "account")
+    @JsonIgnore
+    Badge badge;
+
+    @OneToMany(mappedBy = "account")
+    @JsonIgnore
+    Set<Training> trainings;
+
+    @OneToMany(mappedBy = "account")
+    Set<QuestionFAQ> questionFAQ;
+
+    @OneToMany(mappedBy = "account")
+    Set<Certificate> certificates;
+}
