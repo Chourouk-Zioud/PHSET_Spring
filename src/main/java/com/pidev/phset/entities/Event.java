@@ -52,17 +52,17 @@ public class Event implements Serializable {
     Set<Reservation> reservations;
 
     @ManyToMany
-            @JsonIgnore
+    @JsonIgnore
     Set<Speaker> speakers;
 
 
     @ManyToMany
-            @JsonIgnore
+    @JsonIgnore
     Set<Speaker> speakersconf;
 
 
     @ManyToOne
-            @JsonIgnore
+    @JsonIgnore
     Room room;
 
 

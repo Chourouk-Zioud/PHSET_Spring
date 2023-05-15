@@ -578,7 +578,7 @@ public class EventServices implements IEventServices {
         return true;
     }
 
-    @Scheduled(fixedDelay = 30000)
+    //@Scheduled(fixedDelay = 30000)
     @Transactional
     public void scheduledAssignRoom() {
         unassignRoomIfEventEnded();

@@ -32,11 +32,9 @@ public class Inscription {
     Account account;
 
     @OneToOne(cascade={CascadeType.PERSIST, CascadeType.REMOVE})
-    //@JsonIgnore
     User user;
 
     @ManyToOne
-    //@JsonIgnore
     Offer offer;
 
     @Enumerated(EnumType.STRING)

@@ -2,11 +2,14 @@ package com.pidev.phset.services;
 
 import com.pidev.phset.entities.*;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
@@ -15,7 +18,7 @@ public interface IAdmissionAndRecrutementServices {
 
 
     User addUser(User user);
-
+    Account addAccount(Account account);
     //////// **** CLASSSTATE Services **** ////////
 
     ClassState addClassState(ClassState classState);
@@ -40,6 +43,7 @@ public interface IAdmissionAndRecrutementServices {
     void removeInscription(Integer idInscription);
     Inscription retrieveInscription(Integer idInscription);
     List<Inscription> retrieveAllInscription();
+    public boolean findStatutInscriptionCurrentUser();
 
 
     //////// **** INTERVIEW Services **** ////////
@@ -48,6 +52,7 @@ public interface IAdmissionAndRecrutementServices {
     Interview updateInterview(Interview interview);
     void removeInterview(Integer idInterview);
     Interview retrieveInterview(Integer idInterview);
+    List<Interview> retrieveInterviewByUser(Integer idUser);
     List<Interview> retrieveAllInterview();
 
 
@@ -58,13 +63,20 @@ public interface IAdmissionAndRecrutementServices {
     void removeOffer(Integer idOffer);
     Offer retrieveOffer(Integer idOffer);
     List<Offer> retrieveAllOffer();
+    List<Offer> getAllOfferJob();
+    List<Offer> getAllOfferAdmission();
 
     //////// **** Algorithme IA **** ////////
 
     String addInscriptionWithUserAndAssignOffer(Inscription inscription, Integer idOffer);
+    String addCandidacyAndAssignOffer(Candidacy candidacy,Integer idOffer);
     void setAndUpdateJuryAvailabilities();
     void setAndUpdateClassAvailabilities();
     void addInterviewAndAssignJuryAndCondidateAndClassroomToNewInscription();
+
+    public void sendEmail(String to, String subject, String body) throws MessagingException;
+
+    public void setFile(Principal principal, MultipartFile multipartFile ) throws IOException;
 
     //////// TWILIO SMS ////////
 /*

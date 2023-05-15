@@ -22,7 +22,7 @@ public class Team implements Serializable {
     String nameTeam;
 
     @OneToOne(mappedBy = "team")
-            @JsonIgnore
+    @JsonIgnore
     PostVideo postVideo;
 
     @OneToOne(mappedBy = "team")

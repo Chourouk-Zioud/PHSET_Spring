@@ -42,6 +42,7 @@ public class Interview {
     @OneToMany(mappedBy = "interview")
     @JsonIgnore
     Set<MCQ> mcqs;
+
     @OneToOne
     @JsonIgnore
     GridEvaluation gridEvaluation;
@@ -50,7 +51,7 @@ public class Interview {
     @JsonIgnore
     User condidat;
 
-    @ManyToMany(mappedBy = "interviewJury")
+    @ManyToMany
     @JsonIgnore
     Set<User> jury;
 

@@ -25,7 +25,8 @@ public class Training implements Serializable {
     @Column(length = 1000)
     String descriptionTraining;
     String durationTraining;
-    @JsonIgnore
+    //@JsonIgnore
+    @Enumerated(EnumType.STRING)
     Technology subjectTraining;
     @Enumerated(EnumType.STRING)
     LVL levelTraining;

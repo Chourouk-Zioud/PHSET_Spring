@@ -1,6 +1,7 @@
 package com.pidev.phset.controllers;
 
 import com.pidev.phset.entities.*;
+import com.pidev.phset.repositories.IAccountRepository;
 import com.pidev.phset.repositories.IInscriptionRepository;
 import com.pidev.phset.repositories.IOfferRepository;
 import com.pidev.phset.services.IAdmissionAndRecrutementServices;
@@ -24,23 +25,31 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/")
 public class AdmissionAndRecrutementController {
 
     @Autowired IAdmissionAndRecrutementServices admissionAndRecrutementServices;
     private final IInscriptionRepository iInscriptionRepository;
     private final IOfferRepository iOfferRepository;
+    private final IAccountRepository iAccounRepository;
 
 
     @PostMapping("/addUser")
     User addUser(@RequestBody User user){
         return admissionAndRecrutementServices.addUser(user);
+    }
+
+    @PostMapping("/addAccount")
+    Account addAccount(@RequestBody Account account){
+        return admissionAndRecrutementServices.addAccount(account);
     }
 
     //////// **** CLASSROOM Services **** ////////
@@ -124,11 +133,15 @@ public class AdmissionAndRecrutementController {
         return admissionAndRecrutementServices.retrieveAllInscription();
     }
 
+    @GetMapping("/findStatutInscriptionCurrentUser")
+    boolean findStatutInscriptionCurrentUser(){
+        return admissionAndRecrutementServices.findStatutInscriptionCurrentUser();
+    }
 
     //////// **** INTERVIEW Services **** ////////
 
     @PostMapping("/addInterview")
-  Interview addInterview(@RequestBody Interview interview){
+    Interview addInterview(@RequestBody Interview interview){
         return admissionAndRecrutementServices.addInterview(interview);
     }
 
@@ -145,6 +158,16 @@ public class AdmissionAndRecrutementController {
     @GetMapping("/retrieveInterview/{id}")
     Interview retrieveInterview(@PathVariable("id") Integer idInterview){
         return admissionAndRecrutementServices.retrieveInterview(idInterview);
+    }
+
+    //@GetMapping("/retrieveInterviewByUser/{id}")
+    //Interview retrieveInterviewByUser(@PathVariable("id") Integer idUser){
+    //    return admissionAndRecrutementServices.retrieveInterviewByUser(idUser);
+    //}
+
+    @GetMapping("/retrieveInterviewByCurrentUser/{id}")
+    List<Interview> retrieveInterviewByUser(@PathVariable("id") Integer idUser){
+        return admissionAndRecrutementServices.retrieveInterviewByUser(idUser);
     }
 
     @GetMapping("/retrieveAllInterviews")
@@ -180,12 +203,28 @@ public class AdmissionAndRecrutementController {
         return admissionAndRecrutementServices.retrieveAllOffer();
     }
 
+    @GetMapping("/getAllOfferJob")
+    public List<Offer> getAllOfferJob(){
+        return admissionAndRecrutementServices.getAllOfferJob();
+    }
+
+    @GetMapping("/getAllOfferAdmission")
+    public List<Offer> getAllOfferAdmission(){
+        return admissionAndRecrutementServices.getAllOfferAdmission();
+    }
+
     //////// **** Algorithme
 
-    @PutMapping("/addInscriptionWithUserAndAssignOffer/{idOffer}")
-    public String addInscriptionWithUserAndAssignOffer(@RequestBody Inscription inscription,@PathVariable("idOffer") Integer idOffer){
+    @PostMapping("/addInscriptionWithUserAndAssignOffer/{idOffer}")
+    public String addInscriptionWithUserAndAssignOffer(@RequestBody Inscription inscription, @PathVariable("idOffer")  Integer idOffer){
         return admissionAndRecrutementServices.addInscriptionWithUserAndAssignOffer(inscription,idOffer);
     }
+
+    @PostMapping("/addCandidacyAndAssignOffer/{idOffer}")
+    public String addCandidacyAndAssignOffer(@RequestBody Candidacy candidacy,@PathVariable("idOffer") Integer idOffer){
+        return admissionAndRecrutementServices.addCandidacyAndAssignOffer(candidacy,idOffer);
+    }
+
 
     @PutMapping("/addInterviewAndAssignJuryAndCondidateAndClassroomToNewInscription")
     public void addInterviewAndAssignJuryAndCondidateAndClassroomToNewInscription(){
@@ -193,18 +232,18 @@ public class AdmissionAndRecrutementController {
     }
 
     ////////////////////////// TWILIO SMS //////////////////////////////////////////////////
-/*
-    @PostMapping("/api/TWILIO/addAdmission")
-    public ResponseEntity<Admission> addAdmission(@RequestBody Admission admission) {
-        Admission newAdmission = admissionAndRecrutementServices.addAdmission(admission);
-        return new ResponseEntity<>(newAdmission, HttpStatus.CREATED);
-    }
 
-    @PostMapping("/sendAcceptanceSMS/{id}")
-    public ResponseEntity<Void> sendAcceptanceSMS(@PathVariable Long id) {
-        admissionAndRecrutementServices.sendAcceptanceSMS(id);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
+//    @PostMapping("/api/TWILIO/addAdmission")
+//    public ResponseEntity<Admission> addAdmission(@RequestBody Admission admission) {
+//        Admission newAdmission = admissionAndRecrutementServices.addAdmission(admission);
+//        return new ResponseEntity<>(newAdmission, HttpStatus.CREATED);
+//    }
+//
+//    @PostMapping("/sendAcceptanceSMS/{id}")
+//    public ResponseEntity<Void> sendAcceptanceSMS(@PathVariable Long id) {
+//        admissionAndRecrutementServices.sendAcceptanceSMS(id);
+//        return new ResponseEntity<>(HttpStatus.OK);
+//    }
 
     ////////////// EXTRACT TEXT FROM PDF ///////////////
 
@@ -214,32 +253,32 @@ public class AdmissionAndRecrutementController {
     }
 
     ////////////// UPLOAD & SAVE PDF ///////////////
+//
+//    @ApiOperation(value = "Upload a PDF file", consumes = "multipart/form-data", produces = "application/json")
+//    @ApiResponses(value = {
+//                            @ApiResponse(responseCode = "200", description = "File uploaded successfully"),
+//                            @ApiResponse(responseCode = "400", description = "Invalid file format")
+//                            })
+//    @PostMapping(value = "/uploadAndSavePDF", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+//    public String uploadFile(@ApiParam(value = "Select a PDF file to upload", required = true)
+//                                             @RequestParam("file") MultipartFile file) throws IOException {
+//
+//        // Check if the file is a PDF file
+//        if (!file.getContentType().equals(MediaType.APPLICATION_PDF_VALUE)) {
+//            return ("Invalid file format");
+//        }
+//
+//        // Code to save the PDF file
+//        Path filePath = Paths.get("C:\\Users\\LENOVO\\Documents\\ESPRIT\\Semester 2\\PIDEV\\PHSET-Spring-Angular\\src\\main\\java\\com\\pidev\\phset\\uploadedFiles\\" + file.getOriginalFilename());
+//        Files.write(filePath, file.getBytes());
+//
+//        String path = filePath.toString();
+//
+//        return path;
+//    }
 
-    @ApiOperation(value = "Upload a PDF file", consumes = "multipart/form-data", produces = "application/json")
-    @ApiResponses(value = {
-                            @ApiResponse(responseCode = "200", description = "File uploaded successfully"),
-                            @ApiResponse(responseCode = "400", description = "Invalid file format")
-                            })
-    @PostMapping(value = "/uploadAndSavePDF", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public String uploadFile(@ApiParam(value = "Select a PDF file to upload", required = true)
-                                             @RequestParam("file") MultipartFile file) throws IOException {
-
-        // Check if the file is a PDF file
-        if (!file.getContentType().equals(MediaType.APPLICATION_PDF_VALUE)) {
-            return ("Invalid file format");
-        }
-
-        // Code to save the PDF file
-        Path filePath = Paths.get("C:\\Users\\LENOVO\\Documents\\ESPRIT\\Semester 2\\PIDEV\\PHSET-Spring-Angular\\src\\main\\java\\com\\pidev\\phset\\uploadedFiles\\" + file.getOriginalFilename());
-        Files.write(filePath, file.getBytes());
-
-        String path = filePath.toString();
-
-        return path;
-    }
 
 
- */
 
 
 //    @PostMapping("/upload")
@@ -253,6 +292,11 @@ public class AdmissionAndRecrutementController {
 //        return e.getMessage();
 //    }
 
+
+    @PutMapping(value = "/setFileUser", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public void setFile(Principal principal, @RequestParam(value = "file", required = false) MultipartFile multipartFile ) throws IOException{
+        admissionAndRecrutementServices.setFile(principal,multipartFile);
+    }
 
     ////////////// MAIL ///////////////
 

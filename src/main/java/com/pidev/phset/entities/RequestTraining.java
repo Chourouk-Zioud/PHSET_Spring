@@ -18,9 +18,8 @@ public class RequestTraining implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer idRequest;
-
     String nameRequest;
 
     @ManyToOne
-    User user;
+    Account account;
 }

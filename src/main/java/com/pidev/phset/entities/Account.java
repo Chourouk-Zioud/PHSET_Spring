@@ -62,4 +62,8 @@ public class Account implements Serializable {
 
     @OneToMany(mappedBy = "account")
     Set<Certificate> certificates;
+
+    @OneToMany(mappedBy = "account")
+    @JsonIgnore
+    Set<RequestTraining> requests;
 }

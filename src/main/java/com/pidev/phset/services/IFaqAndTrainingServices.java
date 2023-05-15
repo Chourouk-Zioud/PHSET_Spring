@@ -46,7 +46,7 @@ public interface IFaqAndTrainingServices {
     void removeQuestionExam(Integer idQuestionExam);
     QuestionExam retrieveQuestionExam(Integer idQuestionExam);
     List<QuestionExam> retrieveAllQuestionExam();
-
+    String addQuestionAndResponseExam(QuestionExam question);
     /////////// ***** QUESTIONFAQ ***** ///////////
 
     String addQuestionFAQ(QuestionFAQ questionFAQ);

@@ -35,7 +35,6 @@ public class Comment implements Serializable{
     Date commentedAt;
 
     @JsonIgnore
-
     @ManyToOne
     Account account; // The user who wants to comment
 
@@ -46,6 +45,7 @@ public class Comment implements Serializable{
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "postCo")
     Set<Comment> postComments; //Reflexive association : A comment can have multiple replies
+
     @JsonIgnore
     @ManyToOne
     Comment postCo;

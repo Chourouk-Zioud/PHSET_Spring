@@ -4,6 +4,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Set;
 
@@ -18,7 +19,7 @@ public class Candidacy {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer idCandidacy;
-    Date dateCandidacy;
+    LocalDateTime dateCandidacy;
     String cvUrl;
     String coverLetterUrl;
     String email;

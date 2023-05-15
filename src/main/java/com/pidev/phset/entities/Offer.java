@@ -1,5 +1,6 @@
 package com.pidev.phset.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -32,6 +33,6 @@ public class Offer implements Serializable {
     TypeGrid offerType;
 
     @OneToMany(mappedBy = "offer")
-    //@JsonIgnore
+    @JsonIgnore
     Set<Inscription> inscriptions;
 }

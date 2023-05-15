@@ -1,5 +1,6 @@
 package com.pidev.phset.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.security.core.GrantedAuthority;
@@ -40,20 +41,26 @@ public class User implements Serializable, UserDetails {
     @Enumerated(EnumType.STRING)
     private  Role role;
 
+    @JsonIgnore
+    byte[] cv;
+
+    @JsonIgnore
+    byte[] lm;
+
     @OneToMany(mappedBy = "user")
     Set<UserAvailability> userAvailabilities;
 
 
     @OneToOne(mappedBy = "user")
+    @JsonIgnore
     Inscription inscription;
 
     @OneToOne(mappedBy = "condidat")
     Interview interview;
-    @ManyToMany
+
+    @ManyToMany(mappedBy = "jury")
     Set<Interview> interviewJury;
 
-    @OneToMany(mappedBy = "user")
-    Set<RequestTraining> requests;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

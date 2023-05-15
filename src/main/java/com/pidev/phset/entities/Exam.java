@@ -34,10 +34,6 @@ public class Exam implements Serializable {
     @JsonIgnore
     Course course;
 
-    /*
-    @OneToOne(mappedBy = "exam")
-    Certificate certificate;
-*/
     @OneToMany(mappedBy = "exam")
     Set<QuestionExam> questionExams;
 }

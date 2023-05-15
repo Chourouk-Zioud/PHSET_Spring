@@ -1,5 +1,6 @@
 package com.pidev.phset.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -22,6 +23,7 @@ public class ClassState implements Serializable {
     boolean availability;
 
     @ManyToOne
+    @JsonIgnore
     Classroom classroom;
 
 }

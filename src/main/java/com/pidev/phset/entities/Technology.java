@@ -9,5 +9,6 @@ public enum Technology {
     NodeJs,
     Symfony,
     PHP,
-    JAVA
+    JAVA,
+    DOT_NET
 }

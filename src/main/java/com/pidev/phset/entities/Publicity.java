@@ -23,14 +23,8 @@ public class Publicity implements Serializable {
     @NotBlank
     @Size(max = 40)
     String Name;
-   // @NotBlank
-    //@Size(max = 2)
     int min_age;
-   // @NotBlank
-   // @Size(max = 2)
     int max_age;
-   // @NotBlank
-  //  @Size(max = 120)
     String text;
     Date StartDate;
     Date EndDate;

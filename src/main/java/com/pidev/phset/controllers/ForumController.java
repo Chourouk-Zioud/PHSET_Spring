@@ -20,6 +20,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/Forum")
 public class ForumController {
    private IPostServices postServices;

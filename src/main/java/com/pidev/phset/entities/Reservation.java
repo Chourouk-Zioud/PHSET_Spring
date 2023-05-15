@@ -20,18 +20,16 @@ public class Reservation implements Serializable {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     Integer idRes;
-
     LocalDateTime dateRes = LocalDateTime.now();
     Boolean etatPres ;
-
     boolean confirmPay = false;
 
     @ManyToOne
-            @JsonIgnore
+    @JsonIgnore
     Event event;
 
     @ManyToOne
-            @JsonIgnore
+    @JsonIgnore
     Account account;
 
 }

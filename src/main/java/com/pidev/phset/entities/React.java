@@ -19,17 +19,15 @@ public class React implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer ReactId;
-
     @Enumerated(EnumType.STRING)
     ReactEnum reactEnum;
+
     @ManyToOne
     Post post; // The post to like
 
     @JsonIgnore
-
     @ManyToOne
     Account account; // The user who wants to comment
-
 
     @ManyToOne
     Comment comments;

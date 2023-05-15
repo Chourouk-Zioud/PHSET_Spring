@@ -160,6 +160,10 @@ public class FaqAndTrainingController {
         return faqAndTrainingServices.retrieveAllQuestionExam();
     }
 
+    @PostMapping("/addQuestionAndResponseExam")
+    public String addQuestionAndResponseExam(QuestionExam question){
+        return faqAndTrainingServices.addQuestionAndResponseExam(question);
+    }
     /////////// ***** QUESTIONFAQ ***** ///////////
 
     @PostMapping("/addQuestionFAQ")

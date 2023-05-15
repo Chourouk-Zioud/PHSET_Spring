@@ -29,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/evaluation")
 public class EvaluationRestController {
     private final IEvaluationServices evaluationServices;

@@ -18,12 +18,9 @@ public class Question implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int idQuestion;
-
     String nameQuestion;
-
     @Enumerated(EnumType.STRING)
     TypeTest typeTest;
-
     @Enumerated(EnumType.STRING)
     QuestionLevel questionLevel;
 

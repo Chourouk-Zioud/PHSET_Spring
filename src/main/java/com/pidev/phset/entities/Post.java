@@ -37,13 +37,11 @@ public class Post implements Serializable {
 
     String postTitle;
 
-     LocalDateTime createdAt;
+    LocalDateTime createdAt;
 
     String body;
 
-
     int nb_Signal;
-
 
     int nb_etoil;
 
@@ -57,7 +55,7 @@ public class Post implements Serializable {
     List<React> Reacts;
 
 
-@JsonIgnore
+    @JsonIgnore
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     List<Comment> comments ;
 

@@ -437,6 +437,17 @@ public class FaqAndTrainingServices implements IFaqAndTrainingServices {
     };
 
     @Override
+    @Transactional
+    public String addQuestionAndResponseExam(QuestionExam question){
+        questionExamRepository.save(question);
+        for (ReponseExam r : question.getReponsesExam()) {
+            r.setQuestionExam(question);
+            reponseExamRepository.save(r);
+        }
+        return "Added Successfully";
+    };
+
+    @Override
     public String addExamAndAffectToCourseAndAssignQuestionAndResponse(Exam exam,Integer idCourse){
         Course course = courseRepository.findById(idCourse).orElse(null);
         examRepository.save(exam);

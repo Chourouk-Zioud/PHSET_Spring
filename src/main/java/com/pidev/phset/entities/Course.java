@@ -27,7 +27,7 @@ public class Course implements Serializable {
     Integer creditCours;
     String professorCours;
     String unit;
-    //@JsonIgnore
+    @JsonIgnore
     @Enumerated(EnumType.STRING)
     Technology technology;
     byte[] picture;

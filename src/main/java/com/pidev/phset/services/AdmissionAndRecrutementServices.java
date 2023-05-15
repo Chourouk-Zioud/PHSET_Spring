@@ -16,11 +16,16 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -30,22 +35,29 @@ import java.util.regex.Pattern;
 @Service
 @Slf4j
 public class AdmissionAndRecrutementServices implements IAdmissionAndRecrutementServices {
+    @Autowired
+    private ICandidacyRepository CandidacyRepository;
     @Autowired IClassStateRepository classStateRepository;
     @Autowired IClassroomRepository classroomRepository;
     @Autowired IInscriptionRepository inscriptionRepository;
     @Autowired IInterviewRepository interviewRepository;
     @Autowired IOfferRepository offerRepository;
     @Autowired IUserRepository userRepository;
+    @Autowired IAccountRepository accountRepository;
     @Autowired IUserAvailabilityRepository userAvailabilityRepository;
     //@Autowired AdmissionRepository admissionRepository;
     @Autowired private JavaMailSender sender;
 
-    //////// **** CLASSSTATE Services **** ////////
+    //////// **** other Services **** ////////
 
     @Override
     public User addUser(User user){
         return  userRepository.save(user);
     };
+
+    public Account addAccount(Account account){
+        return accountRepository.save(account);
+    }
 
     //////// **** CLASSSTATE Services **** ////////
 
@@ -106,7 +118,9 @@ public class AdmissionAndRecrutementServices implements IAdmissionAndRecrutement
 
     @Override
     public Inscription addInscription(Inscription inscription) {
-        return inscriptionRepository.save(inscription);
+        Inscription i = inscriptionRepository.save(inscription);
+        i.setState(false);
+        return inscriptionRepository.save(i);
     }
 
     @Override
@@ -129,6 +143,17 @@ public class AdmissionAndRecrutementServices implements IAdmissionAndRecrutement
         return (List<Inscription>) inscriptionRepository.findAll();
     }
 
+    @Override
+    public boolean findStatutInscriptionCurrentUser(){
+        List<Inscription> inscriptions = (List<Inscription>) inscriptionRepository.findAll();
+        for (Inscription i : inscriptions) {
+            if (i.getUser().getIdUser()==1){
+                return i.getState();
+            }
+        }
+        return false;
+    }
+
     //////// **** INTERVIEW Services **** ////////
 
     @Override
@@ -149,6 +174,18 @@ public class AdmissionAndRecrutementServices implements IAdmissionAndRecrutement
     @Override
     public Interview retrieveInterview(Integer idInterview) {
         return interviewRepository.findById(idInterview).orElse(null);
+    }
+
+    @Override
+    public List<Interview> retrieveInterviewByUser(Integer idUser) {
+        User user = userRepository.findById(idUser).orElse(null);
+        if (user != null && user.getInterview()!=null){
+            List<Interview> list = new ArrayList<>();
+            list.add(user.getInterview());
+            return list;
+        }else {
+            return null;
+        }
     }
 
     @Override
@@ -183,6 +220,32 @@ public class AdmissionAndRecrutementServices implements IAdmissionAndRecrutement
         return (List<Offer>) offerRepository.findAll();
     }
 
+    @Override
+    public List<Offer> getAllOfferJob() {
+        List<Offer> offers;
+        List<Offer> offersJob = new ArrayList<>();
+        offers = (List<Offer>) offerRepository.findAll();
+        for (Offer o : offers) {
+            if (o.getOfferType()==TypeGrid.Job){
+                offersJob.add(o);
+            }
+        }
+        return offersJob;
+    }
+
+    @Override
+    public List<Offer> getAllOfferAdmission() {
+        List<Offer> offers;
+        List<Offer> offersJob = new ArrayList<>();
+        offers = (List<Offer>) offerRepository.findAll();
+        for (Offer o : offers) {
+            if (o.getOfferType()==TypeGrid.Admission){
+                offersJob.add(o);
+            }
+        }
+        return offersJob;
+    }
+
 
     ///////////////////////// **** Algorithme  **** /////////////////////////////////////////////////////////////
 
@@ -193,6 +256,7 @@ public class AdmissionAndRecrutementServices implements IAdmissionAndRecrutement
     public String addInscriptionWithUserAndAssignOffer(Inscription inscription, Integer idOffer){
         Offer offer = offerRepository.findById(idOffer).orElse(null);
         String tel = inscription.getUser().getPhone();
+        inscription.getUser().setRole(Role.ROLE_Student);
         inscription.getUser().setInscription(inscription);
         inscription.setOffer(offer);
         inscription.setDateInscription(LocalDateTime.of(LocalDateTime.now().getYear(), LocalDateTime.now().getMonth(), LocalDateTime.now().getDayOfMonth(), 0, 00, 00));
@@ -202,6 +266,16 @@ public class AdmissionAndRecrutementServices implements IAdmissionAndRecrutement
     }
 
 
+    @Override
+    @Transactional
+    public String addCandidacyAndAssignOffer(Candidacy candidacy, Integer idOffer){
+        Offer offer = offerRepository.findById(idOffer).orElse(null);
+        candidacy.setOffer(offer);
+        candidacy.setDateCandidacy(LocalDateTime.of(LocalDateTime.now().getYear(), LocalDateTime.now().getMonth(), LocalDateTime.now().getDayOfMonth(), 0, 00, 00));
+        CandidacyRepository.save(candidacy);
+        // sendSMS(tel, "Inscription bien reçu !!!");
+        return ("Added Successfully :) ");
+    }
 
 
 //    @Override
@@ -222,7 +296,7 @@ public class AdmissionAndRecrutementServices implements IAdmissionAndRecrutement
 
     @Override
     @Transactional
-    @Scheduled(cron = "*/5 * * * * *")
+    //@Scheduled(cron = "*/5 * * * * *")
     public void setAndUpdateJuryAvailabilities(){
         Set<User> allJuryList = new HashSet<>();
         allJuryList = userRepository.getAllJury();
@@ -273,7 +347,7 @@ public class AdmissionAndRecrutementServices implements IAdmissionAndRecrutement
 
     @Override
     @Transactional
-    @Scheduled(cron = "*/5 * * * * *")
+    //@Scheduled(cron = "*/5 * * * * *")
     public void setAndUpdateClassAvailabilities(){
         Set<Classroom> allClassList = new HashSet<>();
         classroomRepository.findAll().forEach(allClassList::add);
@@ -645,6 +719,32 @@ public class AdmissionAndRecrutementServices implements IAdmissionAndRecrutement
     }
 
     ////////////// MAIL ///////////////
+
+    @Autowired
+    private JavaMailSender mailSender;
+
+    @Override
+    public void sendEmail(String to, String subject, String body) throws MessagingException {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+        helper.setTo(to);
+        helper.setSubject(subject);
+        helper.setText(body, true);
+
+        mailSender.send(message);
+    }
+
+    public void setFile(Principal principal, MultipartFile multipartFile ) throws IOException{
+        User user = userRepository.findByIdUser(3);
+        if(multipartFile!=null){
+            byte[] bytes = multipartFile.getBytes();
+            user.setCv(bytes);
+        }
+        userRepository.save(user);
+    }
+
+
 
     @Override
     public String sendMail() {
