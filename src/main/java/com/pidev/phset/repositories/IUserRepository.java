@@ -33,4 +33,8 @@ public interface IUserRepository extends CrudRepository<User,Integer> {
     @Query("select u from User u where u.role='ROLE_NewUSER'")
     Set<User> getAllCandidates();
     User getFirstByIdUser(Integer idUser);
+
+    User findFirstByOrderByIdUserDesc();
+
+
 }

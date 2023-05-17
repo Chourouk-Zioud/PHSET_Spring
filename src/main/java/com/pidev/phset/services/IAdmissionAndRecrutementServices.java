@@ -68,15 +68,20 @@ public interface IAdmissionAndRecrutementServices {
 
     //////// **** Algorithme IA **** ////////
 
-    String addInscriptionWithUserAndAssignOffer(Inscription inscription, Integer idOffer);
+    String addInscriptionTNWithUserAndAssignOffer(Inscription inscription, Integer idOffer, Integer idAccount);
+    String addInscriptionINTWithUserAndAssignOffer(Inscription inscription, Integer idOffer, Integer idAccount);
+    String addInscriptionALTWithUserAndAssignOffer(Inscription inscription, Integer idOffer, Integer idAccount);
+    String addInscriptionNIGHTWithUserAndAssignOffer(Inscription inscription, Integer idOffer, Integer idAccount);
+    String addInscriptionJOBWithUserAndAssignOffer(Inscription inscription, Integer idOffer, Integer idAccount);
     String addCandidacyAndAssignOffer(Candidacy candidacy,Integer idOffer);
     void setAndUpdateJuryAvailabilities();
     void setAndUpdateClassAvailabilities();
     void addInterviewAndAssignJuryAndCondidateAndClassroomToNewInscription();
-
+    String addInscriptionWithCVAndLM(Inscription inscription, Integer idOffer, Integer idAccount, MultipartFile cv, MultipartFile lm);
     public void sendEmail(String to, String subject, String body) throws MessagingException;
 
-    public void setFile(Principal principal, MultipartFile multipartFile ) throws IOException;
+    public void setCV(Principal principal, MultipartFile multipartFile ) throws IOException;
+    public void setLM(Principal principal, MultipartFile multipartFile ) throws IOException;
 
     //////// TWILIO SMS ////////
 /*
@@ -105,9 +110,9 @@ public interface IAdmissionAndRecrutementServices {
 
     void sendMailInterview(Date date, String salle, String bloc);
 
+    List<Inscription> getAllInscriptionAsc();
 
-
-
-
+    List<Inscription> getInscriptionByOffer_OfferType(TypeGrid offerType);
+    List<Inscription> getInscriptionByDateInscription(Date date);
 
 }

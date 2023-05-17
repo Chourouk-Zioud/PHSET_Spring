@@ -16,4 +16,5 @@ public interface IQuestionRepository extends CrudRepository<Question,Integer> {
     List<Question> findByTypeTest(TypeTest a);
 
 
+
 }

@@ -6,6 +6,7 @@ import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -19,17 +20,15 @@ public class Certificate implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer idCertif;
     String titleCertif;
-
+    String firstName;
+    String lastName;
+    @JsonIgnore
+    LocalDateTime date = LocalDateTime.now();
     String bodyCertif;
-
     String signatureCertif;
-
     String UniqueId;
-
     byte[] qrCode;
-
     byte[] pdfBytes;
-
     String certifUrl;
     @JsonIgnore
     @ManyToOne

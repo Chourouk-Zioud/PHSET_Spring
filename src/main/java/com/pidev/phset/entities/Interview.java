@@ -48,11 +48,9 @@ public class Interview {
     GridEvaluation gridEvaluation;
 
     @OneToOne
-    @JsonIgnore
     User condidat;
 
     @ManyToMany
-    @JsonIgnore
     Set<User> jury;
 
 

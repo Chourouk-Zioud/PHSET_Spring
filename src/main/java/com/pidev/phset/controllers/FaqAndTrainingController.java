@@ -45,6 +45,10 @@ public class FaqAndTrainingController {
         return faqAndTrainingServices.retrieveAllCertificates();
     }
 
+    @GetMapping("/retrieveAllCertificatesByAccount/{idAccount}")
+    public List<Certificate> retrieveAllCertificatesByAccount(@PathVariable("idAccount") Integer idAccount){
+        return faqAndTrainingServices.retrieveAllCertificatesByAccount(idAccount);
+    }
 
     /////////// ***** CHAPTER ***** ///////////
 
@@ -427,11 +431,17 @@ public class FaqAndTrainingController {
     @GetMapping("/searchPossiblesQuestionsResponses")
     public void searchPossiblesQuestionsResponses(String question){
         faqAndTrainingServices.searchPossiblesQuestionsResponses(question);
-    };
+    }
 
+    @GetMapping("/getNewQuestionFAQ")
+    public List<QuestionFAQ> getNewQuestionFAQ(){
+        return faqAndTrainingServices.getNewQuestionFAQ();
+    }
 
-
-
+    @PostMapping("/addResponse/{idQ}")
+    public String addResponse(@PathVariable("idQ") Integer idQ,@RequestBody ReponseFAQ r){
+        return faqAndTrainingServices.addResponse(idQ , r);
+    }
 
 
 //

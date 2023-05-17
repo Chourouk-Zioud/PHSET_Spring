@@ -215,10 +215,40 @@ public class AdmissionAndRecrutementController {
 
     //////// **** Algorithme
 
-    @PostMapping("/addInscriptionWithUserAndAssignOffer/{idOffer}")
-    public String addInscriptionWithUserAndAssignOffer(@RequestBody Inscription inscription, @PathVariable("idOffer")  Integer idOffer){
-        return admissionAndRecrutementServices.addInscriptionWithUserAndAssignOffer(inscription,idOffer);
+    @PostMapping("/addInscriptionTNWithUserAndAssignOffer/{idOffer}/{idAccount}")
+    public String addInscriptionTNWithUserAndAssignOffer(@RequestBody Inscription inscription, @PathVariable("idOffer")  Integer idOffer, @PathVariable("idAccount")  Integer idAccount){
+        return admissionAndRecrutementServices.addInscriptionTNWithUserAndAssignOffer(inscription,idOffer,idAccount);
     }
+
+    @PostMapping("/addInscriptionALTWithUserAndAssignOffer/{idOffer}/{idAccount}")
+    public String addInscriptionALTWithUserAndAssignOffer(@RequestBody Inscription inscription, @PathVariable("idOffer")  Integer idOffer, @PathVariable("idAccount")  Integer idAccount){
+        return admissionAndRecrutementServices.addInscriptionALTWithUserAndAssignOffer(inscription,idOffer,idAccount);
+    }
+
+    @PostMapping("/addInscriptionINTWithUserAndAssignOffer/{idOffer}/{idAccount}")
+    public String addInscriptionINTWithUserAndAssignOffer(@RequestBody Inscription inscription, @PathVariable("idOffer")  Integer idOffer, @PathVariable("idAccount")  Integer idAccount){
+        return admissionAndRecrutementServices.addInscriptionINTWithUserAndAssignOffer(inscription,idOffer,idAccount);
+    }
+
+    @PostMapping("/addInscriptionJOBWithUserAndAssignOffer/{idOffer}/{idAccount}")
+    public String addInscriptionJOBWithUserAndAssignOffer(@RequestBody Inscription inscription, @PathVariable("idOffer")  Integer idOffer, @PathVariable("idAccount")  Integer idAccount){
+        return admissionAndRecrutementServices.addInscriptionJOBWithUserAndAssignOffer(inscription,idOffer,idAccount);
+    }
+
+    @PostMapping("/addInscriptionNIGHTWithUserAndAssignOffer/{idOffer}/{idAccount}")
+    public String addInscriptionNIGHTWithUserAndAssignOffer(@RequestBody Inscription inscription, @PathVariable("idOffer")  Integer idOffer, @PathVariable("idAccount")  Integer idAccount){
+        return admissionAndRecrutementServices.addInscriptionNIGHTWithUserAndAssignOffer(inscription,idOffer,idAccount);
+    }
+
+    @PostMapping(value ="/addInscriptionWithCVAndLM/{idOffer}/{idAccount}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    String addInscriptionWithCVAndLM(@RequestBody Inscription inscription,@PathVariable("idOffer") Integer idOffer,@PathVariable("idAccount") Integer idAccount,@RequestParam(value = "cv", required = false) MultipartFile cv,@RequestParam(value = "lm", required = false) MultipartFile lm){
+        return admissionAndRecrutementServices.addInscriptionWithCVAndLM(inscription, idOffer, idAccount, cv, lm);
+    }
+
+//    @PutMapping(value = "/setCVUser", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+//    public void setCV(Principal principal, @RequestParam(value = "cv", required = false) MultipartFile multipartFile ) throws IOException{
+//        admissionAndRecrutementServices.setCV(principal,multipartFile);
+
 
     @PostMapping("/addCandidacyAndAssignOffer/{idOffer}")
     public String addCandidacyAndAssignOffer(@RequestBody Candidacy candidacy,@PathVariable("idOffer") Integer idOffer){
@@ -247,9 +277,29 @@ public class AdmissionAndRecrutementController {
 
     ////////////// EXTRACT TEXT FROM PDF ///////////////
 
-    @GetMapping("/extractTextFromPDF")
+    @GetMapping("/extractText")
     public ResponseEntity<String> extractText(@RequestParam("path") String path) {
         return admissionAndRecrutementServices.extractText(path);
+    }
+
+    @GetMapping("/extractTextFromPdf")
+    public String extractTextFromPdf(@RequestParam("path") String path) throws IOException {
+        return admissionAndRecrutementServices.extractTextFromPdf(path);
+    }
+
+    @GetMapping("/extractNiveauEtude")
+    public String extractNiveauEtude(@RequestParam("path") String path) throws IOException {
+        return admissionAndRecrutementServices.extractNiveauEtude(path);
+    }
+
+    @GetMapping("/extractSpecialite")
+    public String extractSpecialite(@RequestParam("path") String path) throws IOException {
+        return admissionAndRecrutementServices.extractSpecialite(path);
+    }
+
+    @GetMapping("/suggestNiveauEtudeAndSpecialite")
+    public String suggestNiveauEtudeAndSpecialite(@RequestParam("niveauEtude") String niveauEtude, @RequestParam("specialite") String specialite) throws IOException {
+        return admissionAndRecrutementServices.suggestNiveauEtudeAndSpecialite(niveauEtude,specialite);
     }
 
     ////////////// UPLOAD & SAVE PDF ///////////////
@@ -293,9 +343,14 @@ public class AdmissionAndRecrutementController {
 //    }
 
 
-    @PutMapping(value = "/setFileUser", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public void setFile(Principal principal, @RequestParam(value = "file", required = false) MultipartFile multipartFile ) throws IOException{
-        admissionAndRecrutementServices.setFile(principal,multipartFile);
+    @PutMapping(value = "/setCVUser", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public void setCV(Principal principal, @RequestParam(value = "cv", required = false) MultipartFile multipartFile ) throws IOException{
+        admissionAndRecrutementServices.setCV(principal,multipartFile);
+    }
+
+    @PutMapping(value = "/setLMUser", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public void setLM(Principal principal, @RequestParam(value = "lm", required = false) MultipartFile multipartFile ) throws IOException{
+        admissionAndRecrutementServices.setLM(principal,multipartFile);
     }
 
     ////////////// MAIL ///////////////
@@ -313,6 +368,21 @@ public class AdmissionAndRecrutementController {
     @RequestMapping("/sendMailInterview")
     public void sendMailInterview(Date date, String salle, String bloc){
         admissionAndRecrutementServices.sendMailInterview(date,salle,bloc);
+    }
+
+    @GetMapping("/getAllInscriptionAsc")
+    public List<Inscription> getAllInscriptionAsc(){
+        return admissionAndRecrutementServices.getAllInscriptionAsc();
+    }
+
+    @GetMapping("/getInscriptionByOffer_OfferType/{offerType}")
+    public List<Inscription> getInscriptionByOffer_OfferType(@PathVariable("offerType") TypeGrid offerType){
+        return admissionAndRecrutementServices.getInscriptionByOffer_OfferType(offerType);
+    }
+
+    @GetMapping("/getInscriptionByDateInscription/{date}")
+    public List<Inscription> getInscriptionByDateInscription(@PathVariable("date") Date date){
+        return admissionAndRecrutementServices.getInscriptionByDateInscription(date);
     }
 
 }

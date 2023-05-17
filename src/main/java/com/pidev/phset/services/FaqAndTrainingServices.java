@@ -17,6 +17,7 @@ public class FaqAndTrainingServices implements IFaqAndTrainingServices {
     @Autowired TrainingOpinionRepository trainingOpinionRepository;
     @Autowired CourseRepository courseRepository;
     @Autowired ExamRepository examRepository;
+    @Autowired IInscriptionRepository inscriptionRepository;
     @Autowired QuestionExamRepository questionExamRepository;
     @Autowired QuestionFAQRepository questionFAQRepository;
     @Autowired ReponseExamRepository reponseExamRepository;
@@ -24,6 +25,7 @@ public class FaqAndTrainingServices implements IFaqAndTrainingServices {
     @Autowired TagRepository tagRepository;
     @Autowired TopicRepository topicRepository;
     @Autowired TrainingRepository trainingRepository;
+    @Autowired IAccountRepository accountRepository;
     @Autowired RequestRepository requestRepository;
 
     ///////////////////////////////// ********** CRUD ********** /////////////////////////////////
@@ -54,6 +56,17 @@ public class FaqAndTrainingServices implements IFaqAndTrainingServices {
     @Override
     public List<Certificate> retrieveAllCertificates() {
         return (List<Certificate>) certificateRepository.findAll();
+    }
+
+    @Override
+    public List<Certificate> retrieveAllCertificatesByAccount(Integer idAccount) {
+        Account account = accountRepository.findById(idAccount).orElse(null);
+        List<Certificate> Certificate = new ArrayList<>();
+        assert account != null;
+        for (Certificate c : account.getCertificates()) {
+            Certificate.add(c);
+        }
+        return Certificate;
     }
 
     /////////// ***** CHAPTER ***** ///////////
@@ -262,6 +275,8 @@ public class FaqAndTrainingServices implements IFaqAndTrainingServices {
     /////////////////////////////////////////////////////////////////
     @Override
     public RequestTraining addRequest(RequestTraining requestTraining) {
+        Account account = accountRepository.findById(2).orElse(null);
+        requestTraining.setAccount(account);
         return requestRepository.save(requestTraining);
     }
 
@@ -519,6 +534,16 @@ public class FaqAndTrainingServices implements IFaqAndTrainingServices {
     };
 
     @Override
+    public String addResponse(Integer idQ, ReponseFAQ r){
+        QuestionFAQ q = questionFAQRepository.findById(idQ).orElse(null);
+        r.setQuestionFAQ(q);
+        reponseFAQRepository.save(r);
+        assert q != null;
+        questionFAQRepository.save(q);
+        return ("Added Successfully");
+    };
+
+    @Override
     public String addTagsToQuestionFAQ(Integer idQ, String tagtext){
         int found = 0;
         QuestionFAQ q = questionFAQRepository.findById(idQ).orElse(null);
@@ -641,7 +666,7 @@ public class FaqAndTrainingServices implements IFaqAndTrainingServices {
         List<String> words = new ArrayList<>();
         for (String w : Qwords) {
             if (w.length()>3){
-                words.add(w);
+                words.add(w.toLowerCase());
                 nbreWord++;
             }
         }
@@ -679,6 +704,19 @@ public class FaqAndTrainingServices implements IFaqAndTrainingServices {
     }
 
     ////////////////////////////////////////////////////////////////////
+
+    @Override
+    public List<QuestionFAQ> getNewQuestionFAQ(){
+        List<QuestionFAQ> res = new ArrayList<>();
+        List<QuestionFAQ> list = questionFAQRepository.findAll();
+        for (QuestionFAQ q : list) {
+            if (q.getReponseFAQ() == null){
+                res.add(q);
+            }
+        }
+        return res;
+    }
+
 
     ////////////// MAIL ///////////////
 

@@ -18,7 +18,12 @@ public class RequestTraining implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer idRequest;
-    String nameRequest;
+    @Enumerated(EnumType.STRING)
+    LVL lvl;
+    @Column(length = 3000)
+    String message;
+    @Enumerated(EnumType.STRING)
+    Technology technology;
 
     @ManyToOne
     Account account;

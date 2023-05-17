@@ -1,10 +1,13 @@
 package com.pidev.phset.repositories;
 
 import com.pidev.phset.entities.Inscription;
+import com.pidev.phset.entities.TypeGrid;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Repository
@@ -29,4 +32,10 @@ public interface IInscriptionRepository extends CrudRepository<Inscription,Integ
     @Query("select ins from Inscription ins where ins.user.interview=null and ins.offer.offerType='Spontaneous'")
     Set<Inscription> listNewInscriptionsForSpontaneous();
 
+    @Query("select ins from Inscription ins order by ins.dateInscription asc ")
+    List<Inscription> getAllInscriptionAsc();
+
+    List<Inscription> getInscriptionByOffer_OfferType(TypeGrid offerType);
+
+    List<Inscription> getInscriptionByDateInscription(Date date);
 }

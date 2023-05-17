@@ -183,7 +183,13 @@ public class AdmissionAndRecrutementServices implements IAdmissionAndRecrutement
             List<Interview> list = new ArrayList<>();
             list.add(user.getInterview());
             return list;
-        }else {
+        } else if (user != null && user.getInterviewJury()!=null) {
+            List<Interview> list = new ArrayList<>();
+            for (Interview i: user.getInterviewJury()) {
+                list.add(i);
+            }
+            return list;
+        }else{
             return null;
         }
     }
@@ -250,19 +256,143 @@ public class AdmissionAndRecrutementServices implements IAdmissionAndRecrutement
     ///////////////////////// **** Algorithme  **** /////////////////////////////////////////////////////////////
 
 
-
     @Override
     @Transactional
-    public String addInscriptionWithUserAndAssignOffer(Inscription inscription, Integer idOffer){
+    public String addInscriptionTNWithUserAndAssignOffer(Inscription inscription, Integer idOffer, Integer idAccount){
         Offer offer = offerRepository.findById(idOffer).orElse(null);
+        Account account = accountRepository.findById(idAccount).orElse(null);
         String tel = inscription.getUser().getPhone();
         inscription.getUser().setRole(Role.ROLE_Student);
         inscription.getUser().setInscription(inscription);
         inscription.setOffer(offer);
+        //inscription.setAccount(account);
+        inscription.getUser().setNationality("Tunisian");
+        inscription.setTypeTraining(TypeTraining.DAILY_CLASS);
         inscription.setDateInscription(LocalDateTime.of(LocalDateTime.now().getYear(), LocalDateTime.now().getMonth(), LocalDateTime.now().getDayOfMonth(), 0, 00, 00));
         inscriptionRepository.save(inscription);
         // sendSMS(tel, "Inscription bien reçu !!!");
         return ("Added Successfully :) ");
+    }
+
+    @Override
+    @Transactional
+    public String addInscriptionALTWithUserAndAssignOffer(Inscription inscription, Integer idOffer, Integer idAccount){
+        Offer offer = offerRepository.findById(idOffer).orElse(null);
+        Account account = accountRepository.findById(idAccount).orElse(null);
+        String tel = inscription.getUser().getPhone();
+        inscription.getUser().setRole(Role.ROLE_Student);
+        inscription.getUser().setInscription(inscription);
+        inscription.setOffer(offer);
+        //inscription.setAccount(account);
+        inscription.getUser().setNationality("Tunisian");
+        inscription.setTypeTraining(TypeTraining.Work_study_training);
+        inscription.setDateInscription(LocalDateTime.of(LocalDateTime.now().getYear(), LocalDateTime.now().getMonth(), LocalDateTime.now().getDayOfMonth(), 0, 00, 00));
+        inscriptionRepository.save(inscription);
+        // sendSMS(tel, "Inscription bien reçu !!!");
+        return ("Added Successfully :) ");
+    }
+
+    @Override
+    @Transactional
+    public String addInscriptionINTWithUserAndAssignOffer(Inscription inscription, Integer idOffer, Integer idAccount){
+        Offer offer = offerRepository.findById(idOffer).orElse(null);
+        Account account = accountRepository.findById(idAccount).orElse(null);
+        String tel = inscription.getUser().getPhone();
+        inscription.getUser().setRole(Role.ROLE_Student);
+        inscription.getUser().setInscription(inscription);
+        inscription.setOffer(offer);
+        //inscription.setAccount(account);
+        inscription.getUser().setNationality("Foreign");
+        inscription.setTypeTraining(TypeTraining.DAILY_CLASS);
+        inscription.setDateInscription(LocalDateTime.of(LocalDateTime.now().getYear(), LocalDateTime.now().getMonth(), LocalDateTime.now().getDayOfMonth(), 0, 00, 00));
+        inscriptionRepository.save(inscription);
+        // sendSMS(tel, "Inscription bien reçu !!!");
+        return ("Added Successfully :) ");
+    }
+
+    @Override
+    @Transactional
+    public String addInscriptionNIGHTWithUserAndAssignOffer(Inscription inscription, Integer idOffer, Integer idAccount){
+        Offer offer = offerRepository.findById(idOffer).orElse(null);
+        Account account = accountRepository.findById(idAccount).orElse(null);
+        String tel = inscription.getUser().getPhone();
+        inscription.getUser().setRole(Role.ROLE_Student);
+        inscription.getUser().setInscription(inscription);
+        inscription.setOffer(offer);
+        //inscription.setAccount(account);
+        inscription.getUser().setNationality("Foreign");
+        inscription.setTypeTraining(TypeTraining.NIGHT_CLASSES);
+        inscription.setDateInscription(LocalDateTime.of(LocalDateTime.now().getYear(), LocalDateTime.now().getMonth(), LocalDateTime.now().getDayOfMonth(), 0, 00, 00));
+        inscriptionRepository.save(inscription);
+        // sendSMS(tel, "Inscription bien reçu !!!");
+        return ("Added Successfully :) ");
+    }
+
+
+    public String addInscriptionWithCVAndLM(Inscription inscription, Integer idOffer, Integer idAccount, MultipartFile cv, MultipartFile lm) {
+        Offer offer = offerRepository.findById(idOffer).orElse(null);
+        Account account = accountRepository.findById(idAccount).orElse(null);
+        String tel = inscription.getUser().getPhone();
+        inscription.getUser().setRole(Role.ROLE_Student);
+        inscription.getUser().setInscription(inscription);
+        inscription.setOffer(offer);
+        //inscription.setAccount(account);
+        inscription.getUser().setNationality("Tunisian");
+        inscription.setDateInscription(LocalDateTime.of(LocalDateTime.now().getYear(), LocalDateTime.now().getMonth(), LocalDateTime.now().getDayOfMonth(), 0, 00, 00));
+        inscriptionRepository.save(inscription);
+        try {
+            if (cv != null) {
+                byte[] cvBytes = cv.getBytes();
+                inscription.getUser().setCv(cvBytes);
+            }
+            if (lm != null) {
+                byte[] lmBytes = lm.getBytes();
+                inscription.getUser().setLm(lmBytes);
+            }
+            userRepository.save(inscription.getUser());
+        } catch (IOException e) {
+            return "Error while saving CV or LM.";
+        }
+
+        return "Added Successfully :)";
+    }
+
+
+    @Override
+    @Transactional
+    public String addInscriptionJOBWithUserAndAssignOffer(Inscription inscription, Integer idOffer, Integer idAccount){
+        Offer offer = offerRepository.findById(idOffer).orElse(null);
+        Account account = accountRepository.findById(idAccount).orElse(null);
+        String tel = inscription.getUser().getPhone();
+        inscription.getUser().setRole(Role.ROLE_Student);
+        inscription.getUser().setInscription(inscription);
+        inscription.setOffer(offer);
+        //inscription.setAccount(account);
+        inscription.getUser().setNationality("Tunisian");
+        //inscription.setTypeTraining(TypeTraining.NIGHT_CLASSES);
+        inscription.setDateInscription(LocalDateTime.of(LocalDateTime.now().getYear(), LocalDateTime.now().getMonth(), LocalDateTime.now().getDayOfMonth(), 0, 00, 00));
+        inscriptionRepository.save(inscription);
+        // sendSMS(tel, "Inscription bien reçu !!!");
+        return ("Added Successfully :) ");
+    }
+
+
+    public void setCV(Principal principal, MultipartFile multipartFile ) throws IOException{
+        User user = userRepository.findFirstByOrderByIdUserDesc();
+        if(multipartFile!=null){
+            byte[] bytes = multipartFile.getBytes();
+            user.setCv(bytes);
+        }
+        userRepository.save(user);
+    }
+
+    public void setLM(Principal principal, MultipartFile multipartFile ) throws IOException{
+        User user = userRepository.findFirstByOrderByIdUserDesc();
+        if(multipartFile!=null){
+            byte[] bytes = multipartFile.getBytes();
+            user.setLm(bytes);
+        }
+        userRepository.save(user);
     }
 
 
@@ -296,7 +426,7 @@ public class AdmissionAndRecrutementServices implements IAdmissionAndRecrutement
 
     @Override
     @Transactional
-    //@Scheduled(cron = "*/5 * * * * *")
+    @Scheduled(cron = "*/5 * * * * *")
     public void setAndUpdateJuryAvailabilities(){
         Set<User> allJuryList = new HashSet<>();
         allJuryList = userRepository.getAllJury();
@@ -347,7 +477,7 @@ public class AdmissionAndRecrutementServices implements IAdmissionAndRecrutement
 
     @Override
     @Transactional
-    //@Scheduled(cron = "*/5 * * * * *")
+    @Scheduled(cron = "*/5 * * * * *")
     public void setAndUpdateClassAvailabilities(){
         Set<Classroom> allClassList = new HashSet<>();
         classroomRepository.findAll().forEach(allClassList::add);
@@ -683,7 +813,7 @@ public class AdmissionAndRecrutementServices implements IAdmissionAndRecrutement
     @Override
     public String extractNiveauEtude(String pdfText) {
         // Recherche du motif "niveau d'étude : [niveau d'étude]" dans le texte
-        Pattern pattern = Pattern.compile("Niveau d’etude : ([\\w\\+]+)");
+        Pattern pattern = Pattern.compile("niveau etude : ([\\w\\+]+)");
         Matcher matcher = pattern.matcher(pdfText);
 
         // Si le motif est trouvé, renvoie le niveau d'étude extrait
@@ -696,7 +826,7 @@ public class AdmissionAndRecrutementServices implements IAdmissionAndRecrutement
 
     @Override
     public String extractSpecialite(String pdfText) {
-        Pattern pattern = Pattern.compile("Specialite : ([\\w\\+]+)");
+        Pattern pattern = Pattern.compile("specialite : ([\\w\\+]+)");
         Matcher matcher = pattern.matcher(pdfText);
 
         // Si le motif est trouvé, renvoie le niveau d'étude extrait
@@ -710,9 +840,9 @@ public class AdmissionAndRecrutementServices implements IAdmissionAndRecrutement
     @Override
     public String suggestNiveauEtudeAndSpecialite(String niveauEtude, String specialite) {
         String result="";
-        if (specialite.equals("informatique") && (niveauEtude.equals("bac+6")||niveauEtude.equals("bac+5")||niveauEtude.equals("bac+4"))){
+        if (specialite.equals("informatique") && (niveauEtude.equals("Bac+6")||niveauEtude.equals("Bac+5")||niveauEtude.equals("Bac+4"))){
             result = "4 SAE";
-        } else if (specialite.equals("informatique") && niveauEtude.equals("bac+3")) {
+        } else if (specialite.equals("informatique") && niveauEtude.equals("Bac+3")) {
             result = "3 A";
         }
         return result;
@@ -733,15 +863,6 @@ public class AdmissionAndRecrutementServices implements IAdmissionAndRecrutement
         helper.setText(body, true);
 
         mailSender.send(message);
-    }
-
-    public void setFile(Principal principal, MultipartFile multipartFile ) throws IOException{
-        User user = userRepository.findByIdUser(3);
-        if(multipartFile!=null){
-            byte[] bytes = multipartFile.getBytes();
-            user.setCv(bytes);
-        }
-        userRepository.save(user);
     }
 
 
@@ -801,5 +922,19 @@ public class AdmissionAndRecrutementServices implements IAdmissionAndRecrutement
     }
 
 
+    @Override
+    public List<Inscription> getAllInscriptionAsc(){
+        return inscriptionRepository.getAllInscriptionAsc();
+    }
+
+    @Override
+    public List<Inscription> getInscriptionByOffer_OfferType(TypeGrid offerType){
+        return inscriptionRepository.getInscriptionByOffer_OfferType(offerType);
+    }
+
+    @Override
+    public List<Inscription> getInscriptionByDateInscription(Date date){
+        return inscriptionRepository.getInscriptionByDateInscription(date);
+    }
 
 }

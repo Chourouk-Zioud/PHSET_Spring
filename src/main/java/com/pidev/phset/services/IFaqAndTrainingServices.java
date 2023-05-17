@@ -13,6 +13,7 @@ public interface IFaqAndTrainingServices {
     void removeCertificate(Integer idCertif);
     Certificate retrieveCertificate(Integer idCertif);
     List<Certificate> retrieveAllCertificates();
+    List<Certificate> retrieveAllCertificatesByAccount(Integer idAccount);
 
     /////////// ***** CHAPTER ***** ///////////
 
@@ -138,7 +139,8 @@ public interface IFaqAndTrainingServices {
 
     void searchPossiblesQuestionsResponses(String question);
 
-
+    List<QuestionFAQ> getNewQuestionFAQ();
+    String addResponse(Integer idQ, ReponseFAQ r);
     /* *********************** API ******************************************* */
 
 

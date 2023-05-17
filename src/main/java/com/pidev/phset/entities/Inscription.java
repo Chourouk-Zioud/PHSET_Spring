@@ -21,8 +21,8 @@ public class Inscription {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer idInscription;
     LocalDateTime dateInscription;
-    String cv;
-    String coverLetter;
+    //String cv;
+    //String coverLetter;
     String classStudent; // 1er,2eme ...
     String departProf; //web,ssd...
     @JsonIgnore

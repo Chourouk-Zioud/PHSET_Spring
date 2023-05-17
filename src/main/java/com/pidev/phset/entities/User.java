@@ -30,9 +30,7 @@ public class User implements Serializable, UserDetails {
     String email;
     String phone;
     String address;
-    String files;
     String Password;
-
     String passport;
     Date birthDate;
     @Enumerated(EnumType.STRING)
@@ -40,11 +38,7 @@ public class User implements Serializable, UserDetails {
     String nationality;
     @Enumerated(EnumType.STRING)
     private  Role role;
-
-    @JsonIgnore
     byte[] cv;
-
-    @JsonIgnore
     byte[] lm;
 
     @OneToMany(mappedBy = "user")
@@ -56,9 +50,11 @@ public class User implements Serializable, UserDetails {
     Inscription inscription;
 
     @OneToOne(mappedBy = "condidat")
+    @JsonIgnore
     Interview interview;
 
     @ManyToMany(mappedBy = "jury")
+    @JsonIgnore
     Set<Interview> interviewJury;
 
 
